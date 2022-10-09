@@ -23,13 +23,41 @@ input UpdateUserInput {
   password: String
 }
 
+type Todo {
+  id: ID!
+  createdAt: Time!
+  updatedAt: Time!
+  deletedAt: DeletedAt!
+  text: String!
+  done: Boolean!
+  userId: ID!
+}
+
+input CreateTodoInput {
+  text: String!
+  done: Boolean!
+  userId: ID!
+}
+
+input UpdateTodoInput {
+  text: String
+  done: Boolean
+  userId: ID
+}
+
 type Query {
   user(id: ID!): User!
   users: [User!]!
+  todo(id: ID!): Todo!
+  todos: [Todo!]!
 }
 
 type Mutation {
   createUser(input: CreateUserInput!): User!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): User!
+
+  createTodo(input: CreateTodoInput!): Todo!
+  updateTodo(id: ID!, input: UpdateTodoInput!): Todo!
+  deleteTodo(id: ID!): Todo!
 }

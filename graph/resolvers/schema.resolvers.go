@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 	"gormql/graph/generated"
 	"gormql/graph/models"
 )
@@ -66,6 +67,58 @@ func (r *mutationResolver) DeleteUser(ctx context.Context, id uint) (*models.Use
 	return &user, nil
 }
 
+// CreateTodo is the resolver for the createTodo field.
+func (r *mutationResolver) CreateTodo(ctx context.Context, input models.CreateTodoInput) (*models.Todo, error) {
+	user := models.User{}
+
+	result := r.DB.First(&user, input.UserID)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	todo := models.Todo{
+		Text:   input.Text,
+		Done:   input.Done,
+		User:   user,
+		UserID: input.UserID,
+	}
+
+	result = r.DB.Create(&todo)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &todo, nil
+}
+
+// UpdateTodo is the resolver for the updateTodo field.
+func (r *mutationResolver) UpdateTodo(ctx context.Context, id uint, input models.UpdateTodoInput) (*models.Todo, error) {
+	user := models.User{}
+
+	result := r.DB.First(&user, *input.UserID)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	todo := models.Todo{}
+
+	result = r.DB.Create(&todo)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &todo, nil
+}
+
+// DeleteTodo is the resolver for the deleteTodo field.
+func (r *mutationResolver) DeleteTodo(ctx context.Context, id uint) (*models.Todo, error) {
+	panic(fmt.Errorf("not implemented: DeleteTodo - deleteTodo"))
+}
+
 // User is the resolver for the user field.
 func (r *queryResolver) User(ctx context.Context, id uint) (*models.User, error) {
 	user := models.User{}
@@ -78,6 +131,16 @@ func (r *queryResolver) Users(ctx context.Context) ([]*models.User, error) {
 	users := []*models.User{}
 	result := r.DB.Find(&users)
 	return users, result.Error
+}
+
+// Todo is the resolver for the todo field.
+func (r *queryResolver) Todo(ctx context.Context, id uint) (*models.Todo, error) {
+	panic(fmt.Errorf("not implemented: Todo - todo"))
+}
+
+// Todos is the resolver for the todos field.
+func (r *queryResolver) Todos(ctx context.Context) ([]*models.Todo, error) {
+	panic(fmt.Errorf("not implemented: Todos - todos"))
 }
 
 // Mutation returns generated.MutationResolver implementation.
