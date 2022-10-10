@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"gormql/graph/generated"
 	"gormql/graph/models"
 )
@@ -116,7 +115,19 @@ func (r *mutationResolver) UpdateTodo(ctx context.Context, id uint, input models
 
 // DeleteTodo is the resolver for the deleteTodo field.
 func (r *mutationResolver) DeleteTodo(ctx context.Context, id uint) (*models.Todo, error) {
-	panic(fmt.Errorf("not implemented: DeleteTodo - deleteTodo"))
+	todo := models.Todo{}
+
+	result := r.DB.First(&todo, id)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	result = r.DB.Delete(&todo)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &todo, nil
 }
 
 // User is the resolver for the user field.
@@ -135,12 +146,16 @@ func (r *queryResolver) Users(ctx context.Context) ([]*models.User, error) {
 
 // Todo is the resolver for the todo field.
 func (r *queryResolver) Todo(ctx context.Context, id uint) (*models.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todo - todo"))
+	todo := models.Todo{}
+	result := r.DB.First(&todo, id)
+	return &todo, result.Error
 }
 
 // Todos is the resolver for the todos field.
 func (r *queryResolver) Todos(ctx context.Context) ([]*models.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+	todos := []*models.Todo{}
+	result := r.DB.Preload("User").Find(&todos)
+	return todos, result.Error
 }
 
 // Mutation returns generated.MutationResolver implementation.

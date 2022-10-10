@@ -11,7 +11,7 @@ import (
 
 func main() {
 	db.Init()
-	db.DB.AutoMigrate(&models.User{})
+	db.DB.AutoMigrate(&models.User{}, &models.Todo{})
 	e := echo.New()
 	routes.Init(e)
 

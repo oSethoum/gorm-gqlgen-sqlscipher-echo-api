@@ -20,6 +20,6 @@ func MarshalDeletedAt(n gorm.DeletedAt) graphql.Marshaler {
 
 func UnmarshalDeletedAt(v interface{}) (gorm.DeletedAt, error) {
 	s, ok := v.(string)
-	t, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", s)
+	t, err := time.Parse("2006-01-02 15:04:05.999999999-0700MST", s)
 	return gorm.DeletedAt{Time: t, Valid: err == nil && ok}, err
 }

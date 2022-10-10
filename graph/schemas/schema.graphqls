@@ -30,6 +30,7 @@ type Todo {
   deletedAt: DeletedAt!
   text: String!
   done: Boolean!
+  user: User!
   userId: ID!
 }
 
